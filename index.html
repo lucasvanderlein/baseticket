@@ -24,6 +24,21 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <!-- Ethereum injection error handling -->
+    <script>
+      // Prevent ethereum property redefinition errors
+      if (typeof window !== 'undefined') {
+        const originalDefineProperty = Object.defineProperty;
+        Object.defineProperty = function(obj, prop, descriptor) {
+          if (prop === 'ethereum' && obj === window && window.ethereum) {
+            console.warn('Ethereum property already exists, skipping redefinition');
+            return obj;
+          }
+          return originalDefineProperty.call(this, obj, prop, descriptor);
+        };
+      }
+    </script>
   </head>
 
   <body>

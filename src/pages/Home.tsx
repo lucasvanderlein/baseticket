@@ -3,7 +3,7 @@ import { EventCard } from '@/components/EventCard';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Link } from 'react-router-dom';
-import { Plus, Sparkles, Calendar, Users, MapPin } from 'lucide-react';
+import { Plus, Sparkles, Calendar, Users, MapPin, Star } from 'lucide-react';
 import { BASE_EVENT_ABI, BASE_EVENT_CONTRACT_ADDRESS, EventStruct } from '@/config/contracts';
 import { mockEvents } from '@/data/mockEvents';
 import { useMemo } from 'react';
