@@ -4,10 +4,12 @@
     <meta charset="utf-8" />
     <title>BaseEvent</title>
     <script>
-      // Redirect to base path for GitHub Pages SPA routing
-      const path = window.location.pathname;
-      const base = '/base-event/';
-      window.location.href = base + '#' + path;
+      // GitHub Pages SPA redirect: preserve full path and query/hash
+      (function() {
+        var l = window.location;
+        var newUrl = l.protocol + '//' + l.host + '/baseticket/?p=' + encodeURIComponent(l.pathname + l.search + l.hash);
+        l.replace(newUrl);
+      })();
     </script>
   </head>
   <body></body>
