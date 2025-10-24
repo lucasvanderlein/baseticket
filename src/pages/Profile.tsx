@@ -205,7 +205,9 @@ const TicketCard = ({ tokenId, event }: { tokenId: bigint; event: EventStruct })
   
   // Get the correct path for the ticket template image
   const getImagePath = (filename: string) => {
-    const basePath = import.meta.env.BASE_URL || '/';
+    // Check if we're in preview mode (port 4173 or 4174)
+    const isPreview = window.location.port === '4173' || window.location.port === '4174';
+    const basePath = isPreview ? '/baseticket/' : '/';
     return `${basePath}${filename}`;
   };
 
