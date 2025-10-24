@@ -74,11 +74,38 @@ The project uses a deployed smart contract on Base Sepolia testnet:
 
 ## Deployment
 
-The project is configured for GitHub Pages deployment:
+The project is configured for automatic GitHub Pages deployment:
 
-1. Build the project: `npm run build`
-2. Deploy to GitHub Pages
-3. The app will be available at `https://yourusername.github.io/base-ticket-forge/`
+### Automatic Deployment (Recommended)
+
+1. Push your code to the `main` branch
+2. GitHub Actions will automatically build and deploy your site
+3. Your app will be available at `https://lucasvanderlein.github.io/baseticket/`
+
+### Manual Deployment
+
+1. Build the project for production:
+   ```bash
+   npm run build:prod
+   ```
+
+2. Test the production build locally:
+   ```bash
+   npm run preview:prod
+   ```
+
+3. The built files will be in the `dist/` directory
+
+### GitHub Pages Setup
+
+1. Go to your repository settings
+2. Navigate to "Pages" section
+3. Select "GitHub Actions" as the source
+4. The workflow will automatically deploy on every push to main
+
+### Configuration
+
+The app is configured with the correct base path (`/base-ticket-forge/`) for GitHub Pages deployment in `vite.config.ts`.
 
 ## License
 
