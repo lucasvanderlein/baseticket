@@ -1,4 +1,4 @@
-# Base Ticket Forge
+# BaseTicket
 
 A decentralized event ticketing platform built on Base Sepolia testnet. Create, manage, and attend events with NFT tickets as proof of attendance.
 
