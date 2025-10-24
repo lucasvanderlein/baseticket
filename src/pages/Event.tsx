@@ -14,9 +14,10 @@ const Event = () => {
   
   // Get the correct path for the ticket template image
   const getImagePath = (filename: string) => {
-    // Check if we're in preview mode (port 4173 or 4174)
+    // Check if we're in production (GitHub Pages) or preview mode
+    const isProduction = window.location.hostname === 'lucasvanderlein.github.io';
     const isPreview = window.location.port === '4173' || window.location.port === '4174';
-    const basePath = isPreview ? '/baseticket/' : '/';
+    const basePath = (isProduction || isPreview) ? '/baseticket/' : '/';
     return `${basePath}${filename}`;
   };
   const { address, isConnected } = useAccount();
