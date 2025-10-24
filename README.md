@@ -1,123 +1,119 @@
-# BaseTicket
+# BaseEvent — NFT Event Tickets on Base
 
-A decentralized event ticketing platform built on Base Sepolia testnet. Create, manage, and attend events with NFT tickets as proof of attendance.
+Create, manage, and verify on‑chain event tickets as non‑transferable NFTs (SBT‑style) on Base.
+
+- Live: https://lucasvanderlein.github.io/baseticket/
+- Repo: https://github.com/lucasvanderlein/baseticket
+- Contract (Base Sepolia): `0x82E87E8D356A4d222A2E603BA6bcfD83f0bd6Afb`  
+  - Contract: https://sepolia.basescan.org/address/0x82E87E8D356A4d222A2E603BA6bcfD83f0bd6Afb  
+  - Txns: https://sepolia.basescan.org/address/0x82E87E8D356A4d222A2E603BA6bcfD83f0bd6Afb#transactions  
+  - Events: https://sepolia.basescan.org/address/0x82E87E8D356A4d222A2E603BA6bcfD83f0bd6Afb#events
+
+## Why BaseEvent
+- Verifiable attendance with non‑transferable NFT tickets.
+- Transparent supply/limits on‑chain.
+- Zero‑infra: open‑source UI, GitHub Pages hosting, wallet‑native UX.
 
 ## Features
+- Create events (name, description, location, date/time, ticket cap).
+- RSVP & mint SBT ticket on Base.
+- “My Tickets” gallery; event details; organizer tools.
+- Clean UI (React + Tailwind + shadcn/ui).
+- Production‑ready SPA deploy on GitHub Pages with deep‑link support.
 
-- 🎫 **NFT Tickets**: Soulbound NFT tickets as proof of attendance
-- 🎪 **Event Management**: Create and manage events with ticket limits
-- 🔗 **Web3 Integration**: Connect with MetaMask and other Web3 wallets
-- 📱 **Responsive Design**: Beautiful UI that works on all devices
-- 🚀 **Base Network**: Built on Base Sepolia testnet
+## Stack
+- React, TypeScript, Vite, Tailwind, shadcn/ui, React Router
+- Wagmi, Viem, Base Sepolia
+- Hosting: GitHub Pages
 
-## Tech Stack
-
-- **Frontend**: React + TypeScript + Vite
-- **UI**: Tailwind CSS + shadcn/ui
-- **Web3**: Wagmi + Viem
-- **Blockchain**: Base Sepolia testnet
-- **Smart Contract**: Solidity
-
-## Getting Started
-
-### Prerequisites
-
-- Node.js 18+
-- MetaMask wallet
-- Base Sepolia testnet configured in MetaMask
-
-### Installation
-
-1. Clone the repository:
-```bash
-git clone https://github.com/yourusername/base-ticket-forge.git
-cd base-ticket-forge
-```
-
-2. Install dependencies:
-```bash
-npm install
-```
-
-3. Start the development server:
-```bash
-npm run dev
-```
-
-4. Open [http://localhost:8080](http://localhost:8080) in your browser
-
-### Building for Production
+## Quick start
 
 ```bash
+# Node 18+ recommended
+npm i
+npm run dev      # http://localhost:8080
 npm run build
+npm run preview  # http://localhost:4173/baseticket/
 ```
 
-## Smart Contract
+## Configuration
+- Vite base path is set for project pages: `/baseticket/` (see `vite.config.ts`).
+- Contract address is set in `src/config/contracts.ts` as `BASE_EVENT_CONTRACT_ADDRESS`.
+- Public assets (e.g. `public/ticket-template.png`) are referenced with the repo base in production.
 
-The project uses a deployed smart contract on Base Sepolia testnet:
+## GitHub Pages (SPA) deep‑links
+To support refresh and direct links like `/baseticket/profile`:
 
-**Contract Address**: `0x82E87E8D356A4d222A2E603BA6bcfD83f0bd6Afb`
+1) `public/404.html`
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>BaseEvent</title>
+    <script>
+      (function () {
+        var l = window.location;
+        var newUrl = l.protocol + '//' + l.host + '/baseticket/?p=' +
+          encodeURIComponent(l.pathname + l.search + l.hash);
+        l.replace(newUrl);
+      })();
+    </script>
+  </head>
+  <body></body>
+  </html>
+```
 
-**Features**:
-- Event creation and management
-- Ticket minting with limits
-- RSVP functionality
-- Soulbound NFT tickets
+2) `index.html` (in `<head>`, before the app bootstraps)
+```html
+<script>
+  (function () {
+    try {
+      var params = new URLSearchParams(window.location.search);
+      var p = params.get('p');
+      if (p) window.history.replaceState(null, '', decodeURIComponent(p));
+    } catch {}
+  })();
+</script>
+```
 
-## Usage
+## Wallet injection guard
+Prevents “Cannot redefine property: ethereum” when multiple extensions inject:
 
-1. **Connect Wallet**: Connect your MetaMask wallet
-2. **Browse Events**: View available events on the homepage
-3. **Create Event**: Create new events with ticket limits
-4. **RSVP**: Get NFT tickets for events
-5. **View Tickets**: Check your tickets in the profile section
+```html
+<!-- put at the very start of <head> -->
+<script>
+  (function () {
+    if (typeof window !== 'undefined') {
+      const original = Object.defineProperty;
+      Object.defineProperty = function (obj, prop, desc) {
+        if (prop === 'ethereum' && obj === window && window.ethereum) {
+          console.warn('Ethereum property already exists, skipping redefinition');
+          return obj;
+        }
+        return original.call(this, obj, prop, desc);
+      };
+    }
+  })();
+</script>
+```
 
-## Deployment
+## Deploy
+- Ensure `vite.config.ts` uses `base: '/baseticket/'` in production.
+- Push to `main`; enable GitHub Pages (Settings → Pages).  
+- Verify deep‑links: `https://<user>.github.io/baseticket/profile` should load without 404.
 
-The project is configured for automatic GitHub Pages deployment:
+## Troubleshooting
+- 404 on refresh: ensure `public/404.html` + the URL restore script in `index.html`.
+- Assets not showing on Pages: confirm paths include `/baseticket/`.
+- Ethereum redefine error: include the guard script at the top of `<head>`.
 
-### Automatic Deployment (Recommended)
-
-1. Push your code to the `main` branch
-2. GitHub Actions will automatically build and deploy your site
-3. Your app will be available at `https://lucasvanderlein.github.io/baseticket/`
-
-### Manual Deployment
-
-1. Build the project for production:
-   ```bash
-   npm run build:prod
-   ```
-
-2. Test the production build locally:
-   ```bash
-   npm run preview:prod
-   ```
-
-3. The built files will be in the `dist/` directory
-
-### GitHub Pages Setup
-
-1. Go to your repository settings
-2. Navigate to "Pages" section
-3. Select "GitHub Actions" as the source
-4. The workflow will automatically deploy on every push to main
-
-### Configuration
-
-The app is configured with the correct base path (`/base-ticket-forge/`) for GitHub Pages deployment in `vite.config.ts`.
+## Roadmap
+- QR check‑in & on‑site verification.
+- Organizer dashboard (exports, stats, cancellations).
+- Allowlists, anti‑bot guard, event cover images & OG previews.
+- Paid tickets (USDC/Smart Wallet), organizer fees, analytics.
+- Mainnet deploy, Basenames integration, audit.
 
 ## License
-
-MIT License - see LICENSE file for details
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
-## Support
-
-For support, please open an issue on GitHub.
+MIT
