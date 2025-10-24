@@ -202,13 +202,19 @@ const TicketCardWithValidation = ({ tokenId }: { tokenId: bigint }) => {
 
 const TicketCard = ({ tokenId, event }: { tokenId: bigint; event: EventStruct }) => {
   const eventDate = new Date(Number(event.date) * 1000);
+  
+  // Get the correct path for the ticket template image
+  const getImagePath = (filename: string) => {
+    const basePath = import.meta.env.BASE_URL || '/';
+    return `${basePath}${filename}`;
+  };
 
   return (
     <div className="relative">
       {/* Ticket using your image file - no background, no borders */}
       <div className="relative">
         <img 
-          src="/ticket-template.png" 
+          src={getImagePath("ticket-template.png")} 
           alt="Event Ticket" 
           className="w-full h-auto"
           style={{
@@ -224,10 +230,10 @@ const TicketCard = ({ tokenId, event }: { tokenId: bigint; event: EventStruct })
             
             // Try different image formats
             const alternatives = [
-              '/ticket-template.jpg',
-              '/ticket-template.jpeg',
-              '/ticket-template.webp',
-              '/ticket-template.svg'
+              getImagePath('ticket-template.jpg'),
+              getImagePath('ticket-template.jpeg'),
+              getImagePath('ticket-template.webp'),
+              getImagePath('ticket-template.svg')
             ];
             
             let currentIndex = 0;

@@ -11,6 +11,12 @@ import { mockEvents } from '@/data/mockEvents';
 
 const Event = () => {
   const { id } = useParams();
+  
+  // Get the correct path for the ticket template image
+  const getImagePath = (filename: string) => {
+    const basePath = import.meta.env.BASE_URL || '/';
+    return `${basePath}${filename}`;
+  };
   const { address, isConnected } = useAccount();
   
   // Skip contract call if contract address is not set (all zeros)
@@ -232,7 +238,7 @@ const Event = () => {
                 {/* Ticket preview using the same design */}
                 <div className="relative mb-4">
                   <img 
-                    src="/ticket-template.png" 
+                    src={getImagePath("ticket-template.png")} 
                     alt="Event Ticket Preview" 
                     className="w-full h-auto mx-auto"
                     style={{
@@ -248,10 +254,10 @@ const Event = () => {
                       
                       // Try different image formats
                       const alternatives = [
-                        '/ticket-template.jpg',
-                        '/ticket-template.jpeg',
-                        '/ticket-template.webp',
-                        '/ticket-template.svg'
+                        getImagePath('ticket-template.jpg'),
+                        getImagePath('ticket-template.jpeg'),
+                        getImagePath('ticket-template.webp'),
+                        getImagePath('ticket-template.svg')
                       ];
                       
                       let currentIndex = 0;
